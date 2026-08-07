@@ -24,12 +24,9 @@
 
 (call-with-ci-muffles
  (lambda ()
-   (cl-repo:ensure-system-dependencies "secrets-backend-os"
+   (cl-repo:ensure-system-dependencies "secrets-protocol"
      :also-tests t
-     :sources '(("ironclad" :ql),
-                ("uuid" :ql),
-                ("babel" :ql),
-                ("rove" :ql)))))
+     :sources '(("rove" :ql)))))
 
 (format t "~&; ci: install phase done~%")
 (uiop:quit 0)

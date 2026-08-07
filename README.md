@@ -1,16 +1,17 @@
 # secrets-protocol
 
-Lispy **CLOS** secrets for [cl-stack](https://github.com/egao1980/cl-stack) — CSPRNG, tokens, constant-time compare, UUID, password KDFs.
+Lispy **CLOS** secrets API for [cl-stack](https://github.com/egao1980/cl-stack) — CSPRNG, tokens, constant-time compare, UUID, password KDFs.
 
-| System | Role |
-|--------|------|
-| `secrets-protocol` (`stack-secrets`) | API |
-| `secrets-backend-os` | OS CSPRNG via Ironclad + uuid |
+| System | Role | Repo |
+|--------|------|------|
+| `secrets-protocol` (`stack-secrets`) | Protocol / API | this repo |
+| `crypto-backend-ironclad` | Default backend (Ironclad CSPRNG + uuid + Argon2i/PBKDF2) | [`egao1980/crypto-backend-ironclad`](https://github.com/egao1980/crypto-backend-ironclad) |
 
-Shape: Python `secrets` + Java `SecureRandom` + Argon2/PBKDF2. Digests/AEAD live in [`crypto-protocol`](https://github.com/egao1980/crypto-protocol).
+Digests/AEAD live in [`crypto-protocol`](https://github.com/egao1980/crypto-protocol). The Ironclad backend implements **both** protocols in one system — there is no separate `secrets-backend-os`.
 
 ```lisp
-(asdf:load-system "secrets-backend-os")
+(asdf:load-system "crypto-backend-ironclad")
+;; binds *secrets-backend* and *crypto-backend*
 
 (stack-secrets:token-hex 32)
 (stack-secrets:token-urlsafe 32)

@@ -10,7 +10,7 @@
 (defun %ensure-backend (&optional (backend *secrets-backend*))
   (or backend
       (error 'secrets-error
-             :message "*secrets-backend* is nil — load secrets-backend-os")))
+             :message "*secrets-backend* is nil — load crypto-backend-ironclad")))
 
 (defgeneric backend-random-bytes (backend n)
   (:documentation "Return N cryptographically strong random octets."))
