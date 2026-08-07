@@ -1,24 +1,16 @@
 # secrets-protocol
 
-Lispy **CLOS** secrets for [cl-stack](https://github.com/egao1980/cl-stack) — CSPRNG, tokens, constant-time compare, UUID, password KDFs.
+CLOS secrets API for [cl-stack](https://github.com/egao1980/cl-stack) — CSPRNG, tokens, constant-time compare, UUID, password KDFs.
 
-| System | Role |
-|--------|------|
-| `secrets-protocol` (`stack-secrets`) | API |
-| `secrets-backend-os` | OS CSPRNG via Ironclad + uuid |
-
-Shape: Python `secrets` + Java `SecureRandom` + Argon2/PBKDF2. Digests/AEAD live in [`crypto-protocol`](https://github.com/egao1980/crypto-protocol).
+**Protocol only.** Default backend is Ironclad via [`crypto-backend-ironclad`](https://github.com/egao1980/crypto-backend-ironclad) (same system as crypto).
 
 ```lisp
-(asdf:load-system "secrets-backend-os")
-
-(stack-secrets:token-hex 32)
+(asdf:load-system "crypto-backend-ironclad")  ; binds *secrets-backend* + *crypto-backend*
 (stack-secrets:token-urlsafe 32)
-(stack-secrets:uuid :version :v4)
-
-(let ((h (stack-secrets:hash-password "s3cret")))
-  (stack-secrets:verify-password "s3cret" h))
+(stack-secrets:hash-password "s3cret")
 ```
+
+Package nick: `stack-secrets`. Digests/AEAD → [`crypto-protocol`](https://github.com/egao1980/crypto-protocol).
 
 ## License
 
