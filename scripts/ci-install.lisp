@@ -26,9 +26,9 @@
  (lambda ()
    (cl-repo:ensure-system-dependencies "secrets-backend-os"
      :also-tests t
-     :sources '(("ironclad" :ql),
-                ("uuid" :ql),
-                ("babel" :ql),
+     :sources '(("ironclad" :ql)
+                ("uuid" :ql)
+                ("babel" :ql)
                 ("rove" :ql)))))
 
 (format t "~&; ci: install phase done~%")
