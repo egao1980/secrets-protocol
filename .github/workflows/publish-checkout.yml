@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        system: [secrets-protocol, secrets-backend-os]
+        system: [secrets-protocol]
     runs-on: ubuntu-latest
     permissions:
       contents: read
