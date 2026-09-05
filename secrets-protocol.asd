@@ -4,7 +4,7 @@
   :author "egao1980"
   :license "MIT"
   :depends-on ("encoding-protocol")
-  :properties (:cl-repo (:ci (:sources (("encoding-protocol" :oci)))))
+  :properties (:cl-repo (:ci ()))
 
   :serial t
   :pathname "src"
