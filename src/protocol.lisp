@@ -34,31 +34,12 @@
 
 (defun token-hex (n &key (backend *secrets-backend*))
   "Hex string of N random bytes (2N chars)."
-  (let ((bytes (token-bytes n :backend backend)))
-    (with-output-to-string (s)
-      (loop for b across bytes do (format s "~2,'0x" b)))))
+  (string-downcase
+   (encoding-protocol:encode (token-bytes n :backend backend) :encoding :base16)))
 
 (defun %base64url (octets)
   "URL-safe base64 without padding."
-  (let* ((table "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_")
-         (len (length octets))
-         (out (make-array (* 4 (ceiling len 3)) :element-type 'character :fill-pointer 0)))
-    (labels ((enc (a b c pad)
-               (let ((n (logior (ash a 16) (ash (or b 0) 8) (or c 0))))
-                 (vector-push (char table (ldb (byte 6 18) n)) out)
-                 (vector-push (char table (ldb (byte 6 12) n)) out)
-                 (unless (>= pad 2)
-                   (vector-push (char table (ldb (byte 6 6) n)) out))
-                 (unless (>= pad 1)
-                   (vector-push (char table (ldb (byte 6 0) n)) out)))))
-      (loop for i from 0 below len by 3
-            do (let* ((remain (- len i))
-                      (a (aref octets i))
-                      (b (and (>= remain 2) (aref octets (+ i 1))))
-                      (c (and (>= remain 3) (aref octets (+ i 2))))
-                      (pad (max 0 (- 3 remain))))
-                 (enc a b c pad))))
-    (coerce out 'simple-string)))
+  (encoding-protocol:encode octets :encoding :base64url :pad nil))
 
 (defun token-urlsafe (n &key (backend *secrets-backend*))
   "URL-safe base64 of N random bytes (Python secrets.token_urlsafe)."
