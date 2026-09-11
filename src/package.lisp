@@ -19,6 +19,7 @@
            #:token-urlsafe
            #:constant-time-equal
            #:uuid
+           #:make-uuid-v7
            #:hash-password
            #:verify-password))
 
