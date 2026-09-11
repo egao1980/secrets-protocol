@@ -57,6 +57,43 @@
 (defun uuid (&key (version :v4) (backend *secrets-backend*))
   (backend-uuid (%ensure-backend backend) :version version))
 
+(defun unix-ms-now ()
+  "Unix epoch milliseconds (second resolution + internal-time fraction)."
+  (let* ((unix-sec (- (get-universal-time) 2208988800))
+         (frac (mod (get-internal-real-time) internal-time-units-per-second)))
+    (+ (* unix-sec 1000)
+       (floor (* frac 1000) internal-time-units-per-second))))
+
+(defun %uuid-string (octets)
+  (flet ((hex (start end)
+           (with-output-to-string (out)
+             (loop for i from start below end
+                   do (format out "~2,'0x" (aref octets i))))))
+    (string-downcase
+     (format nil "~a-~a-~a-~a-~a"
+             (hex 0 4) (hex 4 6) (hex 6 8) (hex 8 10) (hex 10 16)))))
+
+(defun make-uuid-v7 (&key unix-ms random-bytes (backend *secrets-backend*))
+  "RFC 9562 UUID version 7 string.
+   RANDOM-BYTES is 10 CSPRNG octets (or drawn from BACKEND).
+   UNIX-MS defaults to UNIX-MS-NOW."
+  (let* ((ms (or unix-ms (unix-ms-now)))
+         (rand (or random-bytes
+                   (backend-random-bytes (%ensure-backend backend) 10)))
+         (octets (make-array 16 :element-type '(unsigned-byte 8) :initial-element 0)))
+    (unless (= (length rand) 10)
+      (error 'secrets-error :message "UUID v7 needs 10 random bytes"))
+    (setf (aref octets 0) (ldb (byte 8 40) ms)
+          (aref octets 1) (ldb (byte 8 32) ms)
+          (aref octets 2) (ldb (byte 8 24) ms)
+          (aref octets 3) (ldb (byte 8 16) ms)
+          (aref octets 4) (ldb (byte 8 8) ms)
+          (aref octets 5) (ldb (byte 8 0) ms))
+    (replace octets rand :start1 6)
+    (setf (aref octets 6) (logior (logand (aref octets 6) #x0f) #x70)
+          (aref octets 8) (logior (logand (aref octets 8) #x3f) #x80))
+    (%uuid-string octets)))
+
 (defun %password-octets (password)
   (etypecase password
     ((simple-array (unsigned-byte 8) (*)) password)

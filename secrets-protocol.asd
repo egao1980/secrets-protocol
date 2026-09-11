@@ -1,5 +1,5 @@
 (defsystem "secrets-protocol"
-  :version "0.1.1"
+  :version "0.1.2"
   :description "CLOS secrets protocol for cl-stack (CSPRNG, tokens, compare, UUID, password KDF)"
   :author "egao1980"
   :license "MIT"
