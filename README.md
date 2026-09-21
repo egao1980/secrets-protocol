@@ -32,6 +32,12 @@ Digests/AEAD live in [`crypto-protocol`](https://github.com/egao1980/crypto-prot
   (stack-secrets:resolve-secret store ref))
 ```
 
+Offline demo (journal the ref, not the material):
+
+```bash
+sbcl --load examples/store.lisp
+```
+
 ## License
 
 MIT

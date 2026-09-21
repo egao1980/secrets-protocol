@@ -30,7 +30,8 @@
   :serial t
   :components ((:file "package")
                (:file "protocol-test")
-               (:file "store-test"))
+               (:file "store-test")
+               (:file "demo-test"))
   :perform (test-op (o c)
              (unless (symbol-call :rove :run c)
                (error "tests failed for ~A" (component-name c)))))
