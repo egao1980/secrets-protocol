@@ -21,6 +21,22 @@
            #:uuid
            #:make-uuid-v7
            #:hash-password
-           #:verify-password))
+           #:verify-password
+
+           #:secret-ref
+           #:secret-ref-p
+           #:make-secret-ref
+           #:secret-ref-name
+           #:secret-ref-key
+           #:secret-ref-inject
+
+           #:secret-store
+           #:secret-store-p
+           #:resolve-secret
+           #:put-secret
+
+           #:in-memory-secret-store
+           #:in-memory-secret-store-p
+           #:make-in-memory-secret-store))
 
 (in-package #:secrets-protocol)
